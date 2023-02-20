@@ -1,0 +1,113 @@
+========================== JAVA SETUP
+
+Apache Spark runs on a JVM, and developing Spark application requires Java Development Kit. Spark 3.0.0 runs on Java 8 and Java 11.
+If you are using Java 8, then it must be JDK 1.8u92 or above.
+If you already have JAVA installed on your machine, check the JAVA on your machine using the java -version command.
+
+If not, you can get Open Java from the following URL jdk.java.net/java-se-ri/11
+Download the file for your platform. For a windows machine, downloaded the 64-bit windows version.
+Extract your downloaded files somewhere. Copy this folder and place it at a safe location.
+Wherever you are placing your JDK-11 folder, that becomes your JAVA_HOME.
+However, this is not going to work until we set the following environment variables.
+The first environment variable is to set the JAVA_HOME.
+And your JAVA_HOME is the absolute path of your JDK-11 directory -> C:\Program Files\Java\jdk1.8.0_241
+
+The second environment variable is the PATH environment variable.
+You must add the JDK-11\bin folder to your PATH -> C:\Program Files\Java\jdk1.8.0_241\bin
+
+=========================== HADOOP SETUP
+
+The next thing is to set up the Hadoop WinUtils.
+However, if you are using Linux or Mac machine, you do not need the Hadoop WinUtils.
+I am using a windows machine, so I also need Hadoop WinUtils.
+
+You can download the winutils from the following URL. github.com/cdarlint/winutils
+Once downloaded, extract it.
+You will see a bunch of versions. However, I am going to use Hadoop 2.7.7.
+So, I will copy the bin folder of the Hadoop 2.7.7 and place it at another safe location.
+This hadoop directory becomes my HADOOP_HOME -> C:\winutils
+
+You should also add the Hadoop's bin directory to the PATH environment variable -> 
+C:\winutils\bin
+
+=========================== SPARK SETUP
+
+The first thing is to get the Spark Binaries.
+You can download the Spark binaries from spark.apache.org.
+Click the download link, and it will take you to the download page.
+
+You can download the Spark selecting two things.
+Spark Version and Package Type
+I am interested in the Spark 3.0, so I am going to download the Spark 3 binaries.
+And you can see the package type here. This Hadoop version should match with your Hadoop WinUtils.
+
+I am going to download it for Hadoop 2.7, and that is why I took the Hadoop 2.7 for my winutils.
+
+Now, I am going to Un-compress the downloaded file, and you should get a tar file.
+Now you need to extract the tar file, and you should get a Spark 3.0 directory.
+Let me rename it as Spark3.
+This renaming is not necessary, but I feel convenient with small directory names.
+The download folder is not the right place to keep the Spark binaries.
+So, I am going to copy this and place it to a safer location (C:\spark)
+
+Now let's look into the content of the directory.
+The bin folder is the place where all your Spark command-line tools are included.
+
+Now add Path Variables:
+SPARK_HOME
+Edit Path to include $SPARK_HOME/bin
+
+==== log4j
+
+Spark gives you a template for the log4j.
+You will find it in the C:/spark/conf directory i.e. %SPARK_HOME%\conf.
+All we need to do is to rename it and remove the dot-template extension.
+The default file is good enough. However, I recommend making a small change. Open the file and change the root level to WARN or ERROR.
+This small change will disable the INFO messages and show you only Warnings and Errors.
+Save the file, and you are done.
+
+==== conf
+
+The next one is spark-defaults.conf. This is also at C:/spark/conf i.e. %SPARK_HOME%\conf
+I am not going to make any changes to this file at this stage.
+However, at this stage, let's rename this file to remove the dot-template extension.
+
+======================= PYSPARK SETUP
+
+If you are using Python, then you must provide your python installation details to Spark. Spark binaries do not include Python.
+So, you should have already installed Python on your machine and configure the PYSPARK_PYTHON environment variable to establish the relation.
+Find out where python.exe is and that is the value for PYSPARK_PYTHON environment variable
+I installed the Anaconda platform on my system. So for me, python.exe was at C:\Users\Vinod\anaconda3\python
+
+The PYTHONPATH is an environment variable which you can set to add additional directories where Python will look for modules and packages.
+So, this variable should point to the following things.
+%SPARK_HOME%\python;%SPARK_HOME%\python\lib\py4j-0.10.8.1-src.zip
+
+
+======================== TEST THE SETUP IN CMD PROMPT
+
+Test by going to command prompt and running the commands spark-shell and pyspark.
+
+========================= TEST THE SETUP IN VISUAL STUDIO CODE IDE (this piece is from the curreent course itself)
+
+Open the Visual Studio Code IDE.
+Create a simple new file util.py and store it in required location on local desktop (ex: C:\Vinod\SparkLocalDevelopment\Code)
+This will have just the get_spark_session function.
+Right click and zip the file with name util.zip.
+Create another simple file app.py and store in same location. 
+This will just call the spark session from util and run spark.sql('select current_date()').show()
+If the date gets printed your local spark setup is done !!
+
+To invoke the script, open a terminal from Visual Studio Code from the same path in which the code has been developed.
+Execute the below commands. The first command sets the environment variable and the 2nd command invokes the spark code.
+"set" is the windows equivalent for the unix "export" command that we saw in C:\Vinod\AWS DataEngineering\1. Project (DMS Historical data)
+
+C:\Vinod\SparkLocalDevelopment\Code> set appName=sparkdf
+C:\Vinod\SparkLocalDevelopment\Code> spark-submit --deploy-mode client --py-files util.zip app.py
+
+It is not ideal to use EMR cluster for development as it costs money.
+You can develop locally and then deploy in EMR cluster when all local dev / testing is done.
+
+
+
+
